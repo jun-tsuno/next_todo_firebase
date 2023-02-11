@@ -1,17 +1,61 @@
 import axios from "axios";
 import { Todo } from "@/types/types";
+import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { log } from "console";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
-const fetchTodo = async () => {};
+interface IProps {
+	params: { todoId: string };
+}
 
-const TodoPage = () => {
+const fetchTodo = async (todoId: string) => {
+	const docSnap = await getDoc(doc(db, "todos", todoId));
+
+	if (docSnap.exists()) {
+		const todo = docSnap.data();
+		return todo;
+	} else {
+		const message = "No Document";
+		return message;
+	}
+};
+
+const TodoPage = async ({ params: { todoId } }: IProps) => {
+	const todo: any = await fetchTodo(todoId);
+
 	return (
-		<div>
-			<p></p>
+		<div className="bg-green-50 p-10 w-[600px] mx-auto text-center">
+			<p>{todo.title}</p>
+			<p>Status: {todo.isDone ? "DONE" : "NOT DONE"}</p>
 		</div>
 	);
 };
 
 export default TodoPage;
+
+export const generateStaticParams = async () => {
+	let todosPaths: string[] = [];
+	const q = query(collection(db, "todos"));
+	const querySnapshot = await getDocs(q);
+	querySnapshot.forEach((doc) => {
+		const docData = doc.data();
+		return todosPaths.push(docData.todoId.toString());
+	});
+
+	return todosPaths.map((ele) => {
+		return { todoId: ele };
+	});
+};
+
+// 	console.log(paths);
+// 	return {
+// 		paths,
+// 		fallback: false,
+// 	};
+// }
+
 // type PageProps = {
 // 	params: {
 // 		todoId: string;
