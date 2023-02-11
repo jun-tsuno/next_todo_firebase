@@ -1,5 +1,6 @@
 import { collection, query, getDocs, DocumentData } from "firebase/firestore";
 import { db } from "../../firebase";
+import TodoCard from "@/components/TodoCard";
 import Link from "next/link";
 
 const fetchTodos = async () => {
@@ -21,16 +22,12 @@ const HomePage = async () => {
 		showContent = <h1>No ToDo Items</h1>;
 	} else {
 		showContent = (
-			<ul>
+			<div>
 				{todos.length > 0 &&
 					todos.map((todo) => {
-						return (
-							<li key={todo.todoId}>
-								{todo.title}, ID: {todo.todoId}
-							</li>
-						);
+						return <TodoCard key={todo.todoId} todo={todo} />;
 					})}
-			</ul>
+			</div>
 		);
 	}
 
