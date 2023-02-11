@@ -1,10 +1,8 @@
-import Link from "next/link";
-
 const Header = () => {
 	return (
-		<>
-			<div>To-Do List App with Firebase</div>
-		</>
+		<div className="p-5">
+			<h1 className="text-3xl text-center">To-Do List App with Firebase</h1>
+		</div>
 	);
 };
 

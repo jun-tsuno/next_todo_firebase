@@ -1,11 +1,15 @@
-import axios from "axios";
-import { Todo } from "@/types/types";
+import { collection, query, getDocs, DocumentData } from "firebase/firestore";
+import { db } from "../../firebase";
 import Link from "next/link";
 
 const fetchTodos = async () => {
-	const res = await axios("https://jsonplaceholder.typicode.com/todos");
-	const todos: Todo[] = await res.data;
-	return todos;
+	let todosArr: DocumentData[] = [];
+	const q = query(collection(db, "todos"));
+	const querySnapshot = await getDocs(q);
+	querySnapshot.forEach((doc) => {
+		todosArr.push(doc.data());
+	});
+	return todosArr;
 };
 
 const HomePage = async () => {
@@ -21,10 +25,8 @@ const HomePage = async () => {
 				{todos.length > 0 &&
 					todos.map((todo) => {
 						return (
-							<li key={todo.id}>
-								<Link href={`/${todo.id}`}>
-									{todo.title}, ID: {todo.id}
-								</Link>
+							<li key={todo.todoId}>
+								{todo.title}, ID: {todo.todoId}
 							</li>
 						);
 					})}
