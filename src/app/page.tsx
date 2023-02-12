@@ -1,7 +1,8 @@
 import { collection, query, getDocs, DocumentData } from "firebase/firestore";
 import { db } from "../../firebase";
 import TodoCard from "@/components/TodoCard";
-import Link from "next/link";
+import Input from "@/components/Input";
+import { Todo } from "@/types/types";
 
 const fetchTodos = async () => {
 	let todosArr: DocumentData[] = [];
@@ -33,7 +34,12 @@ const HomePage = async () => {
 
 	return (
 		<>
-			<div>{showContent}</div>
+			<div>
+				<div className="text-center my-5">
+					<Input />
+				</div>
+				{showContent}
+			</div>
 		</>
 	);
 };
