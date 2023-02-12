@@ -1,12 +1,17 @@
-import { collection, query, getDocs, DocumentData } from "firebase/firestore";
+import {
+	collection,
+	query,
+	getDocs,
+	DocumentData,
+	orderBy,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import TodoCard from "@/components/TodoCard";
 import Input from "@/components/Input";
-import { Todo } from "@/types/types";
 
 const fetchTodos = async () => {
 	let todosArr: DocumentData[] = [];
-	const q = query(collection(db, "todos"));
+	const q = query(collection(db, "todos"), orderBy("timestamp", "asc"));
 	const querySnapshot = await getDocs(q);
 	querySnapshot.forEach((doc) => {
 		todosArr.push(doc.data());

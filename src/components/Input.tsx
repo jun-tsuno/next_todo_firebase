@@ -2,7 +2,7 @@
 import { Todo } from "@/types/types";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 
 const Input = () => {
@@ -21,14 +21,11 @@ const Input = () => {
 	};
 
 	const addTodo = async (task: Todo) => {
-		// console.log(task);
-		// await setDoc(doc(db, "todos", "2Y5ii33vGYgmhuQkO6Xx"), {
-		// 	...task,
-		// });
-		const newTodo = await addDoc(collection(db, "todos"), {
-			...task,
+		const docRef = doc(db, "todos", task.todoId);
+		await setDoc(docRef, task);
+		await updateDoc(docRef, {
+			timestamp: serverTimestamp(),
 		});
-		console.log(newTodo);
 	};
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
