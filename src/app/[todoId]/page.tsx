@@ -1,5 +1,6 @@
 import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
 import { db } from "../../../firebase";
+import Link from "next/link";
 
 interface IProps {
 	params: { todoId: string };
@@ -22,10 +23,15 @@ const TodoPage = async ({ params: { todoId } }: IProps) => {
 	const todo: any = await fetchTodo(todoId);
 
 	return (
-		<div className="bg-green-50 p-10 w-[600px] mx-auto text-center">
-			<p>{todo.title}</p>
-			<p>Status: {todo.isDone ? "DONE" : "NOT DONE"}</p>
-		</div>
+		<>
+			<div className="bg-green-50 p-10 w-[600px] mx-auto text-center">
+				<p>{todo.title}</p>
+				<p>Status: {todo.isDone ? "DONE" : "NOT DONE"}</p>
+			</div>
+			<Link href="/">
+				<button className="block mx-auto my-5">{"< "}Back</button>
+			</Link>
+		</>
 	);
 };
 
