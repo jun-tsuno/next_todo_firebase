@@ -4,28 +4,35 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
+import { useRouter } from "next/navigation";
 
 const Input = () => {
 	const [value, setValue] = useState("");
+	const router = useRouter();
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		value
-			? addTodo({
-					todoId: uuidv4(),
-					title: value,
-					isDone: false,
-			  })
+			? addTodo(
+					{
+						todoId: uuidv4(),
+						title: value,
+						isDone: false,
+					},
+					router.refresh
+			  )
 			: alert("Input something");
 		setValue("");
 	};
 
-	const addTodo = async (task: Todo) => {
+	const addTodo = async (task: Todo, refresh: () => void) => {
 		const docRef = doc(db, "todos", task.todoId);
 		await setDoc(docRef, task);
 		await updateDoc(docRef, {
 			timestamp: serverTimestamp(),
 		});
+
+		refresh();
 	};
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
